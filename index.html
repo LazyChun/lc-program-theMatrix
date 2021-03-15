@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #cvs{
+            background-color: aqua;
+        }
+    </style>
+</head>
+<body>
+<canvas id="cvs"  width="1300" height="574px"></canvas>
+<script>
+    var cvs = document.getElementById("cvs");
+    var timer;
+    function drawMatrix() {
+        // 设置画布大小和页面相同
+        cvs.width = window.innerWidth;
+        cvs.height = window.innerHeight;
+
+        // 创建一个画笔  画画的上下文
+        var ctx = cvs.getContext("2d");
+        // 文字大小
+        var fontSize = 16;
+        var columns = fontSize ;
+        var columnsNumber = Math.floor(window.innerWidth/columns)// 列数
+        //var row = 0
+
+        var drops = [];
+        for(var i=0;i<columnsNumber;i++){
+            drops[i] = 0
+        }
+        // 获取随机文字
+        function getRandomStr() {
+            var str = "function(){}12 212   12121 dsaj,ojalsdijfdfanfu2jkajsdfsajdfjasuwfasdj"
+            var index = ran(0,str.length)
+            return str[index]
+        }
+
+        // 随机函数
+        function ran(min,max) {
+            return Math.floor(Math.random()*(max-min)+min)
+        }
+
+        // 创建容器  透明矩形与文字
+        function drawBox() {
+            // 画矩形
+            ctx.fillStyle = "rgba(0,0,0,0.05)";
+            ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+
+
+            for(var i=0;i<columnsNumber;i++){
+                var row =drops[i];
+                var y= fontSize*(1+row);
+                var char = getRandomStr();
+                // 画文字
+                ctx.fillStyle = "aqua"
+                ctx.font = "800 "+fontSize+"px 微软雅黑";
+                ctx.fillText(char,i*columns,y)
+                drops[i]++
+                if(y>cvs.height&&ran(0,100)<1){
+                    drops[i]=0
+                }
+            }
+            row++
+
+        }
+
+        if(timer){
+            clearInterval(timer)
+        }
+        timer = setInterval(drawBox,20);
+        drawBox();
+    }
+
+    drawMatrix();
+    function requestFullScreen(){
+        var cvsEle = document.querySelector("#cvs");
+        document.querySelector("#cvs").onclick = function () {
+            //使用Chrome浏览器需要加上webkit
+            // cvsEle.webkitRequestFullScreen();
+            // cvsEle.requestFullscreen();
+            //使用FireFox浏览器需要加上moz
+            // cvsEle.mozRequestFullScreen();
+
+            //    所有浏览器都可以全屏，使用能力测试
+            if (cvsEle.requestFullscreen) {
+                cvsEle.requestFullscreen();
+            } else if (cvsEle.webkitRequestFullScreen) {
+                cvsEle.webkitRequestFullScreen();
+            } else if (cvsEle.mozRequestFullScreen) {
+                cvsEle.mozRequestFullScreen();
+            } else if (cvsEle.msRequestFullScreen) {
+                cvsEle.msRequestFullScreen();
+            }
+        }
+    }
+
+    cvs.ondblclick = ()=>{
+        requestFullScreen();
+        drawMatrix();
+    }
+
+
+</script>
+</body>
+</html>
